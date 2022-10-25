@@ -109,10 +109,21 @@
         border: none;
         font-size: 30px;
         cursor: pointer;
+        z-index: 11;
+      }
+      .confetti {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        visibility: hidden;
+      }
+      .confetti.ok {
+        visibility: visible;
       }
     </style>
   </head>
-
   <body>
     <main class="game">
       <button onclick="shuffle()">BASLA</button>
@@ -2634,11 +2645,13 @@
             </svg>
           </div>
         </div>
+        <canvas class="confetti" id="canvas"></canvas>
       </section>
     </main>
     <script>
       function shuffle() {
         let container = document.getElementById("container");
+        let cenfet = document.getElementById("canvas");
         let elementsArray = Array.prototype.slice.call(
           container.getElementsByClassName("game__card")
         );
@@ -2653,6 +2666,7 @@
         gameCard.forEach((e) => {
           e.classList.remove("flipped");
           e.classList.remove("has-match");
+          b = 0;
           lastSelected = [];
         });
       }
@@ -2671,8 +2685,10 @@
         e.addEventListener("click", demo);
       });
       let lastSelected = [];
+      let b = 0;
 
       function demo(e) {
+        let cenfet = document.getElementById("canvas");
         if (lastSelected.length === 0) {
           this.classList.add("flipped");
           lastSelected.push(this.getAttribute("data-animal"));
@@ -2684,7 +2700,14 @@
             document.querySelectorAll(".flipped").forEach((element) => {
               element.classList.add("has-match");
             });
+            b++;
             lastSelected = [];
+            if (b >= 10) {
+              cenfet.classList.add("ok");
+              setTimeout(() => {
+                cenfet.classList.remove("ok");
+              }, 5000);
+            }
           } else {
             setTimeout(() => {
               gameCard.forEach((e) => {
@@ -2696,5 +2719,6 @@
         }
       }
     </script>
+    <script src="confetti.js"></script>
   </body>
 </html>
